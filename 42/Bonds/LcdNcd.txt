@@ -1,0 +1,107 @@
+@@ Given the settlement date, maturity date and
+@@ coupon frequency of a bond in global vars
+@@ SETT, MAT and P/YR respectively, compute the
+@@ last and next coupon dates on either side of
+@@ the settlement date. The results are returned
+@@ in the X (NCD) and Y (LCD) registers.
+00 { 353-Byte Prgm }
+01▸LBL "LCDNCD"
+02 RCL "SETT"
+03 XEQ "D→DMY"
+04 LSTO "Y1"
+05 LSTO "Y2"
+06 R↓
+07 LSTO "M1"
+08 R↓
+09 LSTO "D1"
+10 RCL "MAT"
+11 XEQ "D→DMY"
+12 R↓
+13 LSTO "M2"
+14 R↓
+15 LSTO "D2"
+16 12
+17 RCL "P/YR"
+18 ÷
+19 LSTO "MTHS"
+20▸LBL A                @ Get the first coupon date in the year
+21 RCL "M2"             @ Increment month by the coupon period
+22 RCL+ "MTHS"          @ until it crosses December
+23 LSTO "M2"
+24 12
+25 X≥Y?
+26 GTO A
+27 MOD
+28 LSTO "M2"            @ M2 is now set to the first coupon month
+29 RCL "M1"             @ If it is already greater than the settlement
+30 X>Y?                 @ date, we have the next coupon date
+31 GTO B                @ otherwise, this is possibly the last coupon
+32 X<Y?                 @ date
+33 GTO E
+34 RCL "D2"
+35 RCL "D1"
+36 X<Y?
+37 GTO E
+38▸LBL B
+39 RCL "D2"
+40 RCL "M2"
+41 RCL "Y2"
+42 XEQ "DMY→D"
+43 LSTO "LCD"           @ Candidate last coupon date, increment
+44 RCL "M2"             @ until the settlement date is crossed
+45 RCL+ "MTHS"
+46 LSTO "M2"
+47 RCL "M1"
+48 X<Y?
+49 GTO C
+50 X>Y?
+51 GTO B
+52 RCL "D2"
+53 RCL "D1"
+54 X≥Y?
+55 GTO B
+56▸LBL C
+57 RCL "M2"             @ Check that we haven't crossed December
+58 12                   @ in the process
+59 X≥Y?
+60 GTO D
+61 MOD
+62 LSTO "M2"
+63 RCL "Y2"
+64 1
+65 +
+66 LSTO "Y2"
+67▸LBL D
+68 "NCD"                @ LCD has the last coupon date and
+69 LASTO "CPNDT"        @ Y2, M2, D2 define the next coupon date
+70 GTO F
+71▸LBL E
+72 RCL "D2"             @ The next coupon date has been found
+73 RCL "M2"             @ Store and decrement the date by one period
+74 RCL "Y2"             @ which will be the last coupon date
+75 XEQ "DMY→D"
+76 LSTO "NCD"
+77 "LCD"
+78 LASTO "CPNDT"
+79 RCL "M2"
+80 RCL- "MTHS"
+81 X>0?                 @ Check if we slipped into the prev year
+82 GTO F
+83 12
+84 +
+85 LSTO "M2"
+86 RCL "Y2"
+87 1
+88 -
+89 LSTO "Y2"
+90▸LBL F
+91 RCL "D2"
+92 RCL "M2"
+93 RCL "Y2"
+94 XEQ "DMY→D"          @ Store in LCD/NCD depending on how we
+95 LSTO IND "CPNDT"     @ got here
+96 CLST
+97 RCL "LCD"            @ Y = LCD
+98 RCL "NCD"            @ X = NCD
+99 RTN
+100 END

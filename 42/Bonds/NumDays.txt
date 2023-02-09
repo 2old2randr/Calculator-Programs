@@ -1,0 +1,84 @@
+@@ Calculate the number of days between
+@@ Date-1 (Z-register) and Date-2 (Y-register)
+@@ given the day count basis in the X-register
+@@ (0=Actual/Actual, 1=30A/360, 2=30E/360)
+@@ Result in x-register is positive if Date-1
+@@ is earlier than Date-2
+00 { 208-Byte Prgm }
+01▸LBL "#DAYS"
+02 X=0?         @ Actual/Actual
+03 GTO 01
+04 LSTO "DCB"
+05 R↓
+06 LSTO "DT2"
+07 R↓
+08 LSTO "DT1"
+09 XEQ "D→DMY"
+10 LSTO "Y1"
+11 R↓
+12 LSTO "M1"
+13 R↓
+14 LSTO "D1"
+15 RCL "DT2"
+16 XEQ "D→DMY"
+17 LSTO "Y2"
+18 R↓
+19 LSTO "M2"
+20 R↓
+21 LSTO "D2"
+22 RCL "DCB"
+23 0
+24 BIT?         @ 30A/360
+25 GTO 02
+26 CLX
+27 1
+28 BIT?         @ 30E/360
+29 GTO 03
+30 RTNERR 5     @ Invalid (unimplemented) day count
+31▸LBL 01
+32 R↓
+33 DDAYS        @ Actual/Actual - use built-in function
+34 RTN
+35▸LBL 02       @ 30A/360
+36 RCL "D2"
+37 31
+38 X≠Y?
+39 GTO 21
+40 RCL "D1"
+41 30
+42 X>Y?
+43 GTO 21
+44 LSTO "D2"    @ D2=30 if D2=31 and D1=30/31
+45▸LBL 21
+46 RCL "D1"
+47 30
+48 X<Y?         @ D1=min(D1,30)
+49 LSTO "D1"
+50 GTO 04
+51▸LBL 03       @ 30E/360
+52 RCL "D2"
+53 30
+54 X<Y?
+55 LSTO "D2"    @ D2=min(D2,30)
+56 RCL "D1"
+57 30
+58 X<Y?
+59 LSTO "D1"    @ D1=min(D1,30)
+60▸LBL 04
+61 RCL "Y2"     @ days = (y2-y1)*360+(m2-m1)*30+(d2-d1)
+62 RCL "Y1"
+63 -
+64 360
+65 ×
+66 RCL "M2"
+67 RCL "M1"
+68 -
+69 30
+70 ×
+71 +
+72 RCL "D2"
+73 RCL "D1"
+74 -
+75 +
+76 RTN
+77 END

@@ -1,0 +1,42 @@
+@@ Decode a date into the day, month and year
+@@ On exit, X=year, Y=month and Z=day
+00 { 63-Byte Prgm }
+01▸LBL "D→DMY"
+02 FS? 67
+03 GTO 02
+04 IP
+05 LASTX
+06 FP
+07 100
+08 ×
+09 IP
+10 LASTX
+11 FP
+12 10000
+13 ×
+14 FS? 31
+15 RTN
+16 R↓
+17 X<>Y
+18 R^
+19 RTN
+20▸LBL 02
+21 IP
+22 LASTX
+23 FP
+24 100
+25 ×
+26 IP
+27 LASTX
+28 FP
+29 100
+30 ×
+31 R↓
+32 X<>Y
+33 R^
+34 X<>Y
+35 R↓
+36 X<>Y
+37 R^
+38 RTN
+39 END

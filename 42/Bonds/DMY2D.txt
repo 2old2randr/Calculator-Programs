@@ -1,0 +1,34 @@
+@@ Given day in Z, month in Y and year in X,
+@@ create a date in the user-selected format
+00 { 59-Byte Prgm }
+01▸LBL "DMY→D"
+02 FS? 67
+03 GTO 01
+04 1ᴇ6
+05 ÷
+06 X<>Y
+07 FC? 31
+08 GTO 02
+09 100
+10 ÷
+11 +
+12 +
+13 RTN
+14▸LBL 02
+15 +
+16 X<>Y
+17 100
+18 ÷
+19 +
+20 RTN
+21▸LBL 01
+22 X<>Y
+23 100
+24 ÷
+25 +
+26 X<>Y
+27 10000
+28 ÷
+29 +
+30 RTN
+31 END

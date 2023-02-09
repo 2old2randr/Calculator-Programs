@@ -1,0 +1,327 @@
+@@ Price bond & solve for yield
+@@ Test case with DMY format selected
+@@ I%=             8.000000
+@@ CPN%=           9.000000
+@@ P/YR=           2.000000
+@@ SETT=           1.091991
+@@ MAT=           15.121999
+@@ CALL=         100.000000
+@@ 30A
+@@ Price(Accr)=105.954177 (1.900000)
+
+00 { 1118-Byte Prgm }
+01▸LBL "Bond"           @ Main menu
+02 CF 22
+03 CLMENU
+04 "PRICE"              @ Store/compute price
+05 KEY 1 XEQ 01
+06 "YTM"                @ Store/solve for yield
+07 KEY 3 XEQ 02
+08 "DURN"               @ Compute duration & convexity
+09 KEY 6 XEQ 42
+10 KEY 7 GTO 20
+11 KEY 8 GTO 10
+12 MENU
+13 STOP
+14 GTO "Bond"
+
+15▸LBL 10               @ Menu page 2
+16 CLMENU
+17 "I%"                 @ Annual yield in percent
+18 KEY 1 XEQ 11
+19 "CPN%"               @ Bond coupon rate in percent
+20 KEY 2 XEQ 12
+21 "P/YR"               @ Coupon frequency
+22 KEY 3 XEQ 13
+23 "SETT"               @ Settlement date
+24 KEY 5 XEQ 14
+25 "MAT"                @ Bond maturity date
+26 KEY 6 XEQ 15
+27 KEY 7 GTO "Bond"
+28 KEY 8 GTO 20
+29 MENU
+30 STOP
+31 GTO 10
+
+32▸LBL 20               @ Menu page 3
+33 XEQ 91               @ Save stack since it is used to
+34 CLMENU               @ build the menu
+35 "CALL"               @ Bond redemption value (% of face)
+36 KEY 1 XEQ 21
+37 RCL "DCB"
+38 "ACT"                @ Day count toggle - Actual/Actual
+39 X=0?
+40 ├"•"
+41 KEY 4 XEQ 24
+42 "30A"                @ Day count toggle - 30/360
+43 0
+44 BIT?
+45 ├"•"
+46 KEY 5 XEQ 25
+47 "30E"                @ Day count toggle - 30A/360
+48 CLX
+49 1
+50 BIT?
+51 ├"•"
+52 KEY 6 XEQ 26
+53 XEQ 92               @ Restore stack
+54 KEY 7 GTO 10
+55 KEY 8 GTO "Bond"
+56 MENU
+57 STOP
+58 GTO 20
+
+59▸LBL 01
+60 "PRICE"
+61 FS?C 22              @ Store price if numeric value
+62 GTO 30               @ in X register, else compute price
+63 XEQ 40
+64 RTN
+65▸LBL 02
+66 "I%"
+67 FS?C 22
+68 GTO 30
+69 XEQ 41
+70 RTN
+71▸LBL 11
+72 "I%"
+73 FS?C 22
+74 GTO 30
+75 VIEW "I%"
+76 RTN
+77▸LBL 12
+78 "CPN%"
+79 FS?C 22
+80 GTO 30
+81 VIEW "CPN%"
+82 RTN
+83▸LBL 13
+84 "P/YR"
+85 FS?C 22
+86 GTO 30
+87 VIEW "P/YR"
+88 RTN
+89▸LBL 14
+90 "SETT"
+91 FS?C 22
+92 GTO 30
+93 VIEW "SETT"
+94 RTN
+95▸LBL 15
+96 "MAT"
+97 FS?C 22
+98 GTO 30
+99 VIEW "MAT"
+100 RTN
+101▸LBL 21
+102 "CALL"
+103 FS?C 22
+104 GTO 30
+105 VIEW "CALL"
+106 RTN
+107▸LBL 24
+108 XEQ 91              @ Save stack
+109 0
+110 GTO 27
+111▸LBL 25
+112 XEQ 91
+113 1
+114 GTO 27
+115▸LBL 26
+116 XEQ 91
+117 2
+118▸LBL 27
+119 STO "DCB"
+120 XEQ 92              @ Restore stack
+121 RTN
+
+122▸LBL 30
+123 LASTO "WHICH"       @ Update global variable with
+124 STO IND "WHICH"     @ value in X-register
+125 VIEW IND "WHICH"
+126 RTN
+
+127▸LBL 40              @ Calculate bond price
+128 XEQ 50              @ Setup parameters
+129 XEQ 51              @ Pricing function
+130 STO "PRICE"
+131 CLST
+132 RCL "ACCR"
+133 RCL "PRICE"
+134 "Price(Accr)="      @ Display in alpha register
+135 ARCL ST X
+136 ├" ("
+137 ARCL ST Y
+138 ├")"
+139 AVIEW
+140 XEQ 90
+141 RTN
+
+142▸LBL 41              @ Solve for YTM
+143 XEQ 50              @ One-time setup of pricing parameters
+144 PGMSLV "Yield"
+145 0
+146 STO "I%"
+147 20
+148 STO "I%"
+149 SOLVE "I%"          @ Call solver
+150 CLST
+151 RCL "I%"
+152 "Yield="            @ Display in alpha register
+153 ARCL ST X
+154 ├"%"
+155 AVIEW
+156 XEQ 90
+157 RTN
+
+158▸LBL "Yield"         @ Global label needed by solver
+159 XEQ 51              @ Call pricing function
+160 RCL- "PRICE"        @ should equal price supplied
+161 RTN
+
+162▸LBL 42
+163 XEQ 50
+164 XEQ 51
+165 LSTO "p"            @ Base price
+166 RCL "I%"
+167 LSTO "bond-i"
+168 0.01
+169 +
+170 STO "I%"
+171 XEQ 51
+172 LSTO "p-up"         @ Price when yield increases by 0.01%
+173 RCL "bond-i"
+174 0.01
+175 -
+176 STO "I%"
+177 XEQ 51
+178 LSTO "p-dn"         @ Price when yield declines by 0.01%
+179 RCL- "p-up"
+180 5000                @ 2 basis point shift
+181 ×
+182 RCL÷ "PRICE"
+183 STO "DURN"          @ Modified duration
+184 RCL "p-dn"
+185 RCL+ "p-up"
+186 RCL "PRICE"
+187 2
+188 ×
+189 -
+190 1ᴇ-8
+191 ÷
+192 RCL÷ "PRICE"
+193 STO "CONV"          @ Convexity
+194 RCL "bond-i"
+195 STO "I%"
+196 XEQ 90
+197 CLST
+198 1
+199 RCL "I%"
+200 %
+201 RCL÷ "P/YR"
+202 +
+203 RCL× "DURN"         @ Macaulay duration
+204 RCL "CONV"
+205 RCL "DURN"
+206 "X=Mod Dur, Y=Co"
+207 ├"nv, Z=Mac Dur"
+208 AVIEW
+209 RTN
+
+210▸LBL 50              @ Bond pricing parameter setup
+211 RCL "SETT"
+212 RCL "MAT"
+213 XEQ "LCDNCD"        @ Get last/next coupon dates
+214 LSTO "NCD"
+215 R↓
+216 LSTO "LCD"
+217 RCL "MAT"           @ Compute number of coupon periods
+218 DDAYS               @ including period containing the
+219 365                 @ settlement date, i.e., from last
+220 ÷                   @ coupon date to maturity
+221 RCL× "P/YR"
+222 ENTER
+223 FP
+224 +
+225 IP
+226 STO "bond-n"        @ bond-n = number of periods
+227 RCL "LCD"
+228 RCL "NCD"
+229 RCL "DCB"
+230 XEQ "#DAYS"
+231 LSTO "T"
+232 RCL "LCD"
+233 RCL "SETT"
+234 RCL "DCB"
+235 XEQ "#DAYS"
+236 RCL÷ "T"
+237 STO "bond-w"        @ bond-w = fraction of period accrued
+238 RCL "CPN%"
+239 RCL÷ "P/YR"
+240 STO "bond-p"        @ bond-p = payment per period
+241 ×
+242 STO "ACCR"
+243 RTN
+
+244▸LBL 51              @ Bond pricing equation
+245 1
+246 RCL "I%"
+247 RCL÷ "P/YR"
+248 %
+249 +
+250 LSTO "Y"            @ (1+r) where r is interest per period
+251 RCL "bond-p"
+252 100
+253 ×
+254 RCL× "P/YR"
+255 RCL÷ "I%"
+256 RCL "Y"
+257 RCL "bond-n"
+258 +/-
+259 Y↑X
+260 1
+261 X<>Y
+262 -
+263 ×
+264 RCL "CALL"
+265 RCL "Y"
+266 RCL "bond-n"
+267 Y↑X
+268 ÷
+269 +
+270 RCL "Y"
+271 RCL "bond-w"
+272 Y↑X
+273 ×
+274 RCL- "ACCR"         @ Clean price
+275 RCL "ACCR"
+276 X<>Y
+277 RTN
+
+278▸LBL 90              @ Clear temp vars used
+279 CLV "bond-n"
+280 CLV "bond-p"
+281 CLV "bond-w"
+282 RTN
+
+283▸LBL 91              @ Save stack
+284 STO "x-reg"
+285 R↓
+286 STO "y-reg"
+287 R↓
+288 STO "z-reg"
+289 R↓
+290 STO "t-reg"
+291 RTN
+
+292▸LBL 92              @ Restore stack
+293 RCL "t-reg"
+294 RCL "z-reg"
+295 RCL "y-reg"
+296 RCL "x-reg"
+297 CLV "x-reg"
+298 CLV "y-reg"
+299 CLV "z-reg"
+300 CLV "t-reg"
+301 RTN
+302 .END.
