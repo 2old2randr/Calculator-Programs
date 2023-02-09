@@ -3,7 +3,8 @@
 Price a bond given yield or solve for yield given price.
 Duration and convexity can also be computed.
 
-The main program is in Bond.txt
+The main program is in Bond.txt.
+
 Supporting functions are in separate files
  - D2DMY.txt: extract day, month, year from a date
  - DMY2D.txt: convert day, month, year to date
