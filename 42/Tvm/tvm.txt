@@ -1,0 +1,32 @@
+00 { 91-Byte Prgm }
+01▸LBL "TVM"
+02 MVAR "PV"
+03 MVAR "I%"
+04 MVAR "N"
+05 MVAR "PMT"
+06 MVAR "B/E"
+07 MVAR "FV"
+08 RCL "I%"
+09 100
+10 ÷
+11 LN1+X
+12 RCL× "N"
+13 E^X-1
+14 RCL× "PMT"
+15 RCL "I%"
+16 100
+17 ÷
+18 1/X
+19 RCL+ "B/E"
+20 ×
+21 RCL "PV"
+22 RCL "I%"
+23 100
+24 ÷
+25 LN1+X
+26 RCL× "N"
+27 E^X
+28 ×
+29 +
+30 RCL+ "FV"
+31 END
