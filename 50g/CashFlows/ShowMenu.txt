@@ -1,0 +1,18 @@
+@@ Main Menu with options to edit/view cashflows and
+@@ execute the NPV/IRR calculations
+\<< {
+    { "CF0" { \<< 'CF0' STO \>>
+              \<< DisplayVars \>>
+              \<< CF0 "CF0" \->TAG \>> } }
+    @ CFj is edited using the matrix editor after setting
+    @ it to process lists (flag 91)
+    { "CFj" { \<< PUSH -91 SF CFj EDITB 'CFj' STO POP \>>
+              \<< DisplayVars \>>
+              \<< CFj "CFj" \->TAG \>> } }
+    { "I%" { \<< 'I%' STO \>>
+             \<< IRR \>>
+             \<< I% "I%" \->TAG \>> } }
+    { "NPV" NPV }
+    { "IRR" IRR }
+} TMENU
+\>>

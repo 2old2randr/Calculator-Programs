@@ -1,0 +1,11 @@
+@@ Display all variables (for cash flow list
+@@ only the number of rows and total number
+@@ of periods are shown)
+\<< PUSH CLLCD
+    3 FIX
+    "I%: " I% + 2 DISP
+    "CF0: " CF0 + 3 DISP
+    "Nj: " CFj SIZE + " (" + CFj NumPeriods + " periods)" 4 DISP
+    POP
+    7 FREEZE
+\>>

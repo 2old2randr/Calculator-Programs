@@ -1,0 +1,21 @@
+@ Calculates the NPV of a set of cashflows.
+@ Stack Level 1: Cashflow-List as a list of lists { {CF1 P1 N1} {CF2 P2 N2} ... }
+@ Output: Sum of discounted cashflows (NPV)
+\<< \-> cfj
+  \<< CF0 1 \->LIST I% 100. / \-> dcf r
+    \<< PUSH -3. SF -105. SF @ Ensure approx. mode
+        @ Each sublist is of the form {Amount Start-Period Number-Repeats}
+        1. cfj SIZE
+        FOR i
+          @ Geometric series sum for repeated cashflows
+          @ discounted to present
+          cfj i GET OBJ\-> DROP
+          r 1. + SWAP NEG ^ 1. SWAP - r /
+          SWAP r 1. + SWAP NEG 1. + ^ * *
+          dcf + 'dcf' STO
+        NEXT
+        dcf \GSLIST
+        POP
+      \>>
+  \>>
+\>>

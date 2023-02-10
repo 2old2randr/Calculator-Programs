@@ -1,0 +1,8 @@
+@@ Ensure that the variables CF0, CFj and I% exist
+\<< 'CF0' VTYPE
+    IF -1. == THEN 0 'CF0' STO END
+    'CFj' VTYPE
+    IF -1. == THEN {{0 0}} 'CFj' STO END
+    'I%' VTYPE
+    IF -1. == THEN 0 'I%' STO END
+\>>

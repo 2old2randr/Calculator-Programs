@@ -1,0 +1,6 @@
+@@ Number of periods in the cash flow list
+@@ is the sum of the start period and number
+@@ of times it is repeated for the last cash flow
+\<< XCF REVLIST HEAD TAIL
+    \GSLIST 1 -
+\>>

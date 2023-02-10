@@ -1,0 +1,19 @@
+@ Uses HP Solve to solve for the IRR of a set of cashflows.
+@ Global CF0 - initial cashflow
+@ Global CFj - list of cashflows. Each cashflow should be a
+@ list {CF} or {CF Num-Repeat} or {CF Start-Period Num-Repeat}
+@ Output: internal rate of return per period (not annualized).
+@ Stored in global I%
+\<<
+  IF CF0 TYPE 0 \=/ CF0 TYPE 28 \=/ AND THEN "CF0 not numeric" DOERR END
+  IF I% TYPE 0 \=/ I% TYPE 28 \=/ AND THEN "I% not numeric" DOERR END
+  IF CFj TYPE 5 \=/ THEN "CFj not a list" DOERR END
+
+  CFj XCF \-> cfj
+  \<<
+    \<< cfj ComputePV \>>
+    'I%'
+    { 1 10 }
+    ROOT "IRR%" \->TAG
+  \>>
+\>>

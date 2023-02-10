@@ -1,0 +1,25 @@
+@ Transforms a list of cashflows to the form expected in the NPV program
+@ Input list of lists: { {CF1 N1} {CF2 NOVAL} {CF3} ... }
+@ Output: { {CF1 P1 N1} {CF2 P2 N2} {CF3 P3 N3} ... }
+@ P1 = 1, P2 = P1 + N1, P3 = P2 + N2, etc.
+@ Nj = 1 if missing or NOVAL
+\<< 1. \-> cf p
+  \<< 1. cf SIZE
+      FOR i
+          cf i GET DUP
+          HEAD SWAP TAIL DUP
+          IF SIZE NOT THEN
+            DROP 1. @ Missing Nj - set to 1
+          ELSE
+            HEAD DUP
+            IF NOVAL SAME THEN
+              DROP 1. @ Nj == NOVAL, set to 1
+            END
+          END
+          p DUP2 + 'p' STO
+          SWAP 3 \->LIST
+          'cf' i ROT PUT
+      NEXT
+      cf
+  \>>
+\>>
