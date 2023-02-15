@@ -40,5 +40,6 @@
     8. DISP
     POP
     7. FREEZE
+    -1. WAIT DROP
 \>>
 'DISPV' STO
