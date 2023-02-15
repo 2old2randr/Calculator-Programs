@@ -1,0 +1,25 @@
+@ Ensure that all global variables used by the Bond app exist
+\<< 'SETT' VTYPE
+    IF -1. == THEN DATE 'SETT' STO END
+    'MAT' VTYPE
+    IF -1. == THEN DATE 'MAT' STO END
+    'FREQ' VTYPE
+    IF -1. == THEN 2. 'FREQ' STO END
+    'DCB' VTYPE
+    IF -1. == THEN 2. 'DCB' STO END
+    'CALL' VTYPE
+    IF -1. == THEN 100. 'CALL' STO END
+    'CPN%' VTYPE
+    IF -1. == THEN 0. 'CPN%' STO END
+    'YLD%' VTYPE
+    IF -1. == THEN 0. 'YLD%' STO END
+    'Price' VTYPE
+    IF -1. == THEN 0. 'Price' STO END
+    'Accrual' VTYPE
+    IF -1. == THEN 0. 'Accrual' STO END
+    'Convexity' VTYPE
+    IF -1. == THEN 0. 'Convexity' STO END
+    'Duration' VTYPE
+    IF -1. == THEN 0. 'Duration' STO END
+\>>
+'INITV' STO

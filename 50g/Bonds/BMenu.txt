@@ -1,0 +1,84 @@
+@ Setup menu for Bond app
+@ Key pressed: Stores value in level 1 to the variable (except for
+@              bond type)
+@ LS-Key: No action or Price / Solve for Yield / Calculate duration
+@ RS-Key: Show value
+\<< { { "SETDT"
+        { \<< 'SETT' STO \>>
+          \<< \>>
+          \<< SETT "Sett" \->TAG \>>
+        }
+      }
+      { "MATDT"
+        { \<< 'MAT' STO \>>
+          \<< \>>
+          \<< MAT "Mat" \->TAG \>>
+        }
+      }
+      { "CPN%"
+        { \<< 'CPN%' STO \>>
+          \<< \>>
+          \<< CPN% "Cpn%" \->TAG \>>
+        }
+      }
+      { "YLD%"
+        { \<< 'YLD%' STO \>>
+          \<< SETT MAT DCB FREQ PPARAM          @ Setup N/Frac
+              FREQ CPN% CALL Price YLDSOLV      @ Compute yield
+          \>>
+          \<< YLD% "Yield" \->TAG \>>
+        }
+      }
+      { "PRICE"
+        { \<< 'Price' STO \>>
+          \<< SETT MAT DCB FREQ PPARAM          @ Setup N/Frac
+              FREQ CPN% YLD% CALL PRICE         @ Price on stack
+              Accrual "Accr" \->TAG SWAP        @ Put Accrual on stack
+          \>>
+          \<< Accrual "Accr" \->TAG
+              Price "Price" \->TAG
+          \>>
+        }
+      }
+      { "DURN"
+        { \<< "LS-DURN to compute" MSGBOX \>>
+          \<< SETT MAT DCB FREQ CPN% YLD% CALL Price DURN \>>
+          \<< Convexity "Conv" \->TAG
+              Duration "Durn" \->TAG
+          \>>
+        }
+      }
+      { "CALL"
+        { \<< 'CALL' STO \>>
+          \<< \>>
+          \<< CALL "Call" \->TAG \>>
+        }
+      }
+      { "B.TYP" {
+         \<< BTYPE \>>   @ Chooser menu for bond type
+         \<< \>>
+         \<< @ Display bond type as human readable string
+             CASE
+                 FREQ 1. == THEN "Annual" END
+                 FREQ 2. == THEN "Semi-Annual" END
+                 FREQ 4. == THEN "Quarterly" END
+                 FREQ \->STR "/YR" +
+             END
+             " " +
+             CASE
+                 DCB 0. == THEN "Act/365" END
+                 DCB 1. == THEN "Act/365NL" END
+                 DCB 2. == THEN "Act/Act" END
+                 DCB 3. == THEN "Act/360" END
+                 DCB 4. == THEN "30A/360" END
+                 DCB 5. == THEN "30E/360 ICMA" END
+                 DCB 6. == THEN "30E/360 German" END
+                 DCB 7. == THEN "30E/360 ISDA" END
+             END +
+         \>>
+       }
+     }
+   }
+   TMENU
+\>>
+'BMENU' STO

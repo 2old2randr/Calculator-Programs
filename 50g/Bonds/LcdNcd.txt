@@ -1,0 +1,44 @@
+@ Computes the last coupon date and next coupon date for
+@ a bond given the settlement date, maturity date and coupon frequency.
+@ Sett Date | Maturity Date | Coupon Freq --> Last Cpn Date | Next Cpn Date
+\<< \-> sett mat freq
+    \<< sett D\->DMY mat D\->DMY 12. freq /
+        \-> sd sm sy md mm my mths
+        \<< @ Find first cpn month in year
+            IF mths 12 < THEN
+                WHILE mm 12 \<=
+                REPEAT mm mths + 'mm' STO
+                END
+                mm 12 MOD 'mm' STO
+            END
+            sy 'my' STO  @ now we have the first coupon of the settlement year in md mm my
+            @ Advance mth till we cross the settlement date
+            IF mm sm >
+               mm sm == md sd > AND OR THEN
+                @ already crossed
+            ELSE
+                DO mm mths + 'mm' STO
+                UNTIL mm sm \>=
+                END
+                IF mm sm == md sd \<= AND THEN
+                    mm mths + 'mm' STO
+                END
+                IF mm 12 > THEN
+                    mm 12 MOD 'mm' STO
+                    my 1 + 'my' STO
+                END
+            END
+            md mm my DMY\->D    @ next coupon date
+            "NCD" \->TAG
+            mm mths - 'mm' STO
+            IF mm 1 < THEN
+                mm 12 + 'mm' STO
+                my 1 - 'my' STO
+            END
+            md mm my DMY\->D    @ last coupon date
+            "LCD" \->TAG
+            SWAP                @ order: LCD, NCD on stack
+        \>>
+    \>>
+\>>
+'LCDNCD' STO

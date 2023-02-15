@@ -1,0 +1,4 @@
+@ Bond pricing app
+\<< INITV DISPV BMENU
+\>>
+'Bond\->' STO

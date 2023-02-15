@@ -1,0 +1,9 @@
+@ Date --> Day | Month | Year
+\<< DUP
+    IP SWAP FP 100. * DUP
+    IP SWAP FP 10000. *
+    IF -42. FC? THEN
+      UNROT SWAP ROT
+    END
+\>>
+'D\->DMY' STO

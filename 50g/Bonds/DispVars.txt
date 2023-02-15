@@ -1,0 +1,44 @@
+@ Display all variable values for a bond on screen
+\<< PUSH
+    CLLCD
+    @ Day basis and coupon frequency are displayed as strings
+    CASE
+        FREQ 1. == THEN "Annual" END
+        FREQ 2. == THEN "Semi-Annual" END
+        FREQ 4. == THEN "Quarterly" END
+        FREQ 12. == THEN "Monthly" END
+        FREQ \->STR "/YR" +
+    END
+    " " +
+    CASE
+        DCB 0. == THEN "Act/365" END
+        DCB 1. == THEN "Act/365NL" END
+        DCB 2. == THEN "Act/Act" END
+        DCB 3. == THEN "Act/360" END
+        DCB 4. == THEN "30A/360" END
+        DCB 5. == THEN "30E/360 ICMA" END
+        DCB 6. == THEN "30E/360 German" END
+        DCB 7. == THEN "30E/360 ISDA" END
+    END
+    +
+    1. DISP
+    "Sett: " SETT TIME TSTR 1. 12. SUB +
+    2. DISP
+    "Mat: " MAT TIME TSTR 1. 12. SUB +
+    3. DISP
+    3. FIX
+    "Call:    " CALL +
+    4. DISP
+    "Coupon:  " CPN% + "%" +
+    5. DISP
+    "Yield:   " YLD% + "%" +
+    6. DISP
+    "Price:   " Price +
+    7. DISP
+    "Accrual: "
+    Accrual +
+    8. DISP
+    POP
+    7. FREEZE
+\>>
+'DISPV' STO

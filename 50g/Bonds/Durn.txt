@@ -1,0 +1,37 @@
+@ Compute modified duration, Macaulay duration and
+@ convexity of a bond.
+@ Settle date | Maturity date | Day Count | Cpn Frequency | Coupon |
+@     Yield | Redemption Amount | Price -->
+@          Macaulay duration | Convexity | Mod. duration
+@ Modified duration and convexity are also saved in the
+@ global variables 'Duration' and 'Convexity'
+\<< \-> sett mat dcb freq cpn% y call p
+    \<< IF p NOT THEN
+            @ Bond has never been priced - do so
+            sett mat dcb freq PPARAM    @ setup n/frac
+            freq cpn% y call PRICE      @ price bond
+            'p' STO
+        END
+        sett mat dcb freq PPARAM \-> n frac      @ needs to be called only once
+        \<<
+            @ Price with 1bp increase in yield
+            n frac freq cpn% y 0.01 + call PRICE \-> pup
+            \<< @ Price with 1bp decrease in yield
+                n frac freq cpn% y 0.01 - call PRICE \-> pdown
+                \<< pdown pup - 5000. * p /
+                    'Duration' STO    @ Modified duration
+                    pdown pup + p 2. * - .0001 SQ / p /
+                    'Convexity' STO
+                    
+                    @ Return values on stack
+                    @ Macaulay duration from modified duration and
+                    @ per-period yield
+                    y 100. / freq / 1. + Duration * "Macaulay" \->TAG
+                    Convexity "Convexity" \->TAG
+                    Duration "Duration" \->TAG
+                \>>
+            \>>
+        \>>
+    \>>
+\>>
+'DURN' STO

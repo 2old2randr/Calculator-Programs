@@ -1,0 +1,22 @@
+@ Compute the clean price and accrued coupon for a bond
+@ No. Periods | Accrued fraction | Cpn Frequency | Coupon | Yield |
+@ Redemption Amt --> Clean Price
+@ Accrued amount and Clean Price are also stored in the global
+@ variables 'Accrual' and 'Price'
+\<< \-> n frac freq cpn% yld% call
+    \<< frac cpn% * freq /
+        'Accrual' STO
+        cpn% freq /
+        yld% 100. / freq /
+        yld% 100. / freq / 1. +
+        \-> pmt y r
+        \<< @ Calculate dirty price
+            1. r n ^ INV - pmt * y /    @ Discounted cpn sum
+            call r n ^ / +              @ Principal discounted
+            r frac ^ *                  @ Extra days
+            Accrual -                   @ Clean price
+            DUP 'Price' STO "Price" \->TAG
+        \>>
+    \>>
+\>>
+'PRICE' STO

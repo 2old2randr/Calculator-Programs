@@ -1,0 +1,6 @@
+@ Day | Month | Year --> date
+\<< 1000000. / UNROT
+    IF -42. FC? THEN SWAP END
+    100. / + +
+\>>
+'DMY\->D' STO

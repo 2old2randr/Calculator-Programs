@@ -1,0 +1,16 @@
+@ Compute yield to maturity for a bond given clean price
+@ Uses the HP Solver and the bond pricing function
+@ No. Periods | Accrual fraction | Cpn Frequency | Coupon |
+@ Redemption Amount | Price --> Yield
+\<< \-> n frac freq cpn% call target
+    \<<
+        \<< n frac freq cpn% YLD% call PRICE
+            target -
+        \>>
+        'YLD%'          @ Global var for solver
+        0.
+        ROOT
+        "Yield%" \->TAG @ Tag result on stack
+    \>>
+\>>
+'YLDSOLV' STO

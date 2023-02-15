@@ -1,0 +1,28 @@
+@ Chooser menu for setting the bond type (coupon frequency and day basis)
+\<< "Coupons per year"
+    { { "Annual" 1. }
+      { "Semi-Annual" 2. }
+      { "Quarterly" 4. }
+      { "Monthly" 12. }
+    }
+    2.  @ Default is semi-annual
+    IF CHOOSE THEN
+        'FREQ' STO
+        @ Day basis choice
+        "Day Count Basis"
+        { { "Act/365" 0. }
+          { "Act/365NL" 1. }
+          { "Act/Act" 2. }
+          { "Act/360" 3. }
+          { "30A/360" 4. }
+          { "30E/360 ICMA" 5. }
+          { "30E/360 German" 6. }
+          { "30E/360 ISDA" 7. }
+        }
+        3.      @ Default to Act/Act (US Treasury)
+        IF CHOOSE THEN
+            'DCB' STO
+        END
+    END
+\>>
+'BTYPE' STO

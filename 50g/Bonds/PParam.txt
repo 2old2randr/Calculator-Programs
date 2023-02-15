@@ -1,0 +1,28 @@
+@ Calculate the number of coupon periods and the
+@ fraction period accrued for the current coupon
+@ Settle Date | Maturity Date | Day Basis | Coupon Frequency -->
+@      No. Periods | Accrued Fraction
+@ This function is separate from the main pricing function
+@ so that it is not called repeatedly when solving for yield
+\<< \-> sdate mat dcb freq
+    \<< sdate mat freq LCDNCD \-> lcd ncd
+        \<< lcd sdate dcb \GDDAYS
+            IF dcb 2. < THEN
+                365. freq /
+            ELSE
+                lcd ncd dcb \GDDAYS
+            END /
+            \-> frac
+            \<< lcd D\->DMY
+                mat D\->DMY
+                \-> ld lm ly md mm my
+                \<< my ly - freq *
+                    mm lm - 12. freq / / +
+                    "Periods" \->TAG
+                    frac "Accr Per" \->TAG
+                \>>
+            \>>
+        \>>
+    \>>
+\>>
+'PPARAM' STO

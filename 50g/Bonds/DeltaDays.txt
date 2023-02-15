@@ -1,0 +1,65 @@
+@ Computes the number of days between two dates given the day basis
+@ Date1 | Date2 | Dcb --> days
+\<< \-> date1 date2 dcb
+    \<< IF dcb 4. < THEN
+            @ Actual/xxx
+            date1 date2 DDAYS
+            "Actual" \->TAG
+        ELSE
+            @ One of the xxx/360 basis
+            date1 D\->DMY
+            date2 D\->DMY
+            ""
+            \-> d1 m1 y1 d2 m2 y2 tag
+            \<< CASE
+                    dcb 4. == THEN
+                        "30A/360" 'tag' STO
+                        IF d2 31. == d1 29. > AND THEN
+                            30. 'd2' STO
+                        END
+                        d1 30. MIN 'd1' STO
+                    END
+                    dcb 5. == THEN
+                        "30E/360 ICMA" 'tag' STO
+                        d1 30. MIN 'd1' STO
+                        d2 30. MIN 'd2' STO
+                    END
+                    @ 30A/360 ISDA not handled (since it needs
+                    @ maturity date) - same as German otherwise
+                    dcb 6. == dcb 7. == OR THEN
+                        "30E/360 German" 'tag' STO
+                        IF d1 29. > THEN
+                            30. 'd1' STO
+                        ELSE
+                            date1 1. DATE+ D\->DMY \-> d m y
+                            \<< IF m 3. == d 1. == AND THEN
+                                    30. 'd1' STO
+                                END
+                            \>>
+                        END
+                        IF d2 29. > THEN
+                            30. 'd2' STO
+                        ELSE
+                            date2 1. DATE+ D\->DMY \-> d m y
+                            \<< IF m 3. == d 1. == AND THEN
+                                    30. 'd2' STO
+                                END
+                            \>>
+                        END
+                    END
+                    @ Unknown - default to 30A/360
+                    "30A/360" 'tag' STO
+                    IF d2 31. == d1 29. > AND THEN
+                        30. 'd2' STO
+                    END
+                    d1 30. MIN 'd1' STO
+                END
+                y2 y1 - 360. *
+                m2 m1 - 30. * +
+                d2 d1 - +
+                tag \->TAG
+            \>>
+        END
+    \>>
+\>>
+'\GDDAYS' STO
