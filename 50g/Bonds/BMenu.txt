@@ -4,25 +4,45 @@
 @ LS-Key: No action or Price / Solve for Yield / Calculate duration
 @ RS-Key: Show value
 \<< { { "SETDT"
-        { \<< 'SETT' STO \>>
+        { \<< IFERR 'SETT' STO THEN
+                  DROP "No data!" MSGBOX
+              ELSE
+                  "SETT: " SETT + 1. DISP 1. FREEZE
+              END
+          \>>
           \<< \>>
           \<< SETT "Sett" \->TAG \>>
         }
       }
       { "MATDT"
-        { \<< 'MAT' STO \>>
+        { \<< IFERR 'MAT' STO THEN
+                  DROP "No data!" MSGBOX
+              ELSE
+                  "MAT: " MAT + 1. DISP 1. FREEZE
+              END
+          \>>
           \<< \>>
           \<< MAT "Mat" \->TAG \>>
         }
       }
       { "CPN%"
-        { \<< 'CPN%' STO \>>
+        { \<< IFERR 'CPN%' STO THEN
+                  DROP "No data!" MSGBOX
+              ELSE
+                  "CPN%: " CPN% + 1. DISP 1. FREEZE
+              END
+          \>>
           \<< \>>
           \<< CPN% "Cpn%" \->TAG \>>
         }
       }
       { "YLD%"
-        { \<< 'YLD%' STO \>>
+        { \<< IFERR 'YLD%' STO THEN
+                  DROP "No data!" MSGBOX
+              ELSE
+                  "YLD%: " YLD% + 1. DISP 1. FREEZE
+              END
+          \>>
           \<< SETT MAT DCB FREQ PPARAM          @ Setup N/Frac
               FREQ CPN% CALL Price YLDSOLV      @ Compute yield
           \>>
@@ -30,7 +50,12 @@
         }
       }
       { "PRICE"
-        { \<< 'Price' STO \>>
+        { \<< IFERR 'Price' STO THEN
+                  DROP "No data!" MSGBOX
+              ELSE
+                  "PRICE: " Price + 1. DISP 1. FREEZE
+              END
+          \>>
           \<< SETT MAT DCB FREQ PPARAM          @ Setup N/Frac
               FREQ CPN% YLD% CALL PRICE         @ Price on stack
               Accrual "Accr" \->TAG SWAP        @ Put Accrual on stack
@@ -49,7 +74,12 @@
         }
       }
       { "CALL"
-        { \<< 'CALL' STO \>>
+        { \<< IFERR 'CALL' STO THEN
+                  DROP "No data!" MSGBOX
+              ELSE
+                  "CALL: " CALL + 1. DISP 1. FREEZE
+              END
+          \>>
           \<< \>>
           \<< CALL "Call" \->TAG \>>
         }
@@ -78,9 +108,9 @@
          \>>
        }
      }
+     "" "" "" @ 3/4/5 not used
+     { "SHOW" \<< DISPV \>> }
    }
-   "" "" "" @ 3/4/5 not used
-   { "SHOW" \<< DISPV \>>
    TMENU
 \>>
 'BMENU' STO
