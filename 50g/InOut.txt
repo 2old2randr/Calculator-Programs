@@ -1,0 +1,24 @@
+@ ASCII <-> HP 50g converter for transferring files from
+@ a computer to the calculator.
+@ If the object on the stack is a string, it is converted
+@ to a calculator object replacing trigraphs with their
+@ equivalent characters.
+@ Otherwise, the object on the stack is converted to an
+@ ASCII string with special characters replaced by trigraphs.
+\<< RCWS RCLF \-> ws f       @ Word-size, Flags
+    \<< 3 TRANSIO DUP        @ Translate all characters
+        IF TYPE 2 == THEN
+            \->STR
+            f SIZE 3 > #2F34Dh #3016Bh IFTE @ 48 vs 49/50
+            SYSEVAL + STR\->
+        ELSE
+            STD 64 STWS \->STR     @ Use word-size = 64
+            @ Windows CRLF line endings (not used)
+            @ f SIZE 3 > #2F34Fh #2FEC9h IFTE SYSEVAL
+            @ Unix line endings
+            f SIZE 3 > #2F34Eh #2FEDDh IFTE SYSEVAL
+        END
+        ws STWS f STOF      @ Restore word size & flags
+    \>>
+\>>
+'INOUT' STO

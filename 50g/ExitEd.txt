@@ -1,0 +1,3 @@
+@ Restore header and font size on exit from editor
+\<< 2 \->HEADER -73 CF \>>
+'EXITED' STO

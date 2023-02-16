@@ -1,0 +1,3 @@
+@ Switch to full-screen and minifont on entering editor
+\<< 0 \->HEADER -73 SF \>>
+'STARTED' STO
