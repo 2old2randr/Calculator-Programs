@@ -1,0 +1,28 @@
+@ Calculate the amortization schedule of a loan
+@ Returns a list of lists. Each sublist corresponds to a
+@ payment period and contains { Period, Principal, payment,
+@ Interest payment, Reduced balance}
+@ The balance in the last sublist will be zero.
+\<< "Enter Loan amount,
+I%, N, P/yr" { "
+:amt:
+:i%:
+:n:
+:p/yr:" { 2. 0. } V } INPUT OBJ\-> \-> p r n f
+    \<< r f / 100. / 'r' STO p    @ decimal rate
+        r * r 1. + n ^ * 1. r + n ^ 1. SWAP - /    @ Monthly payment
+        \-> pmt
+        \<< 1. n
+            FOR i p NEG r * \-> int    @ interest on balance for period
+            \<< i pmt int - 2. RND     @ Principal repayment
+                int 2. RND             @ interest
+                p pmt + int - 2. RND 'p' STO  @ reduced balance
+                p
+                4. \->LIST    @ sublist for period
+            \>>
+            NEXT
+            n DTAG \->LIST    @ Create list of sublists
+        \>>
+    \>>
+\>>
+'AMORTBL' STO
