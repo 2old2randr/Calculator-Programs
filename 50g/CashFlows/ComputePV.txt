@@ -12,7 +12,7 @@
           cfj i GET OBJ\-> DROP
           r 1. + SWAP NEG ^ 1. SWAP - r /
           SWAP r 1. + SWAP NEG 1. + ^ * *
-          dcf + 'dcf' STO
+          'dcf' STO+
         NEXT
         dcf \GSLIST
         POP
