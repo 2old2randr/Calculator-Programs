@@ -7,7 +7,7 @@
         \<< @ Find first cpn month in year
             IF mths 12 < THEN
                 WHILE mm 12 \<=
-                REPEAT mm mths + 'mm' STO
+                REPEAT mths 'mm' STO+
                 END
                 mm 12 MOD 'mm' STO
             END
@@ -17,23 +17,23 @@
                mm sm == md sd > AND OR THEN
                 @ already crossed
             ELSE
-                DO mm mths + 'mm' STO
+                DO mths 'mm' STO+
                 UNTIL mm sm \>=
                 END
                 IF mm sm == md sd \<= AND THEN
-                    mm mths + 'mm' STO
+                    mths 'mm' STO+
                 END
                 IF mm 12 > THEN
                     mm 12 MOD 'mm' STO
-                    my 1 + 'my' STO
+                    'my' INCR DROP
                 END
             END
             md mm my DMY\->D    @ next coupon date
             "NCD" \->TAG
             mm mths - 'mm' STO
             IF mm 1 < THEN
-                mm 12 + 'mm' STO
-                my 1 - 'my' STO
+                12 'mm' STO+
+                'my' DECR DROP
             END
             md mm my DMY\->D    @ last coupon date
             "LCD" \->TAG
