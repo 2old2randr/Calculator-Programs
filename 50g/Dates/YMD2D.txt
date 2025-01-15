@@ -1,0 +1,11 @@
+@ Convert separate numbers for year, month and day into HP format
+\<<
+    IP                  @ Use only integer part of the day number
+    IF -42 FS?          @ Swap m & d if American format
+    THEN SWAP
+    END
+    100. / + SWAP
+    DUP SIGN SWAP ABS   @ Use abs value of year
+    1000000. / ROT +
+    *                   @ multiply by sign of year
+\>>

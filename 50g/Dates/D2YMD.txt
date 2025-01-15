@@ -1,0 +1,13 @@
+@ Separate year, month, day from date in HP format
+\<<
+    DUP SIGN SWAP ABS      @ Determine sign, make positive
+    DUP IP                 @ Isolate DD (or MM)
+    SWAP FP 100. *         @ MM.YYYY (or DD.YYYY)
+    DUP IP                 @ Isolate MM (or DD)
+    SWAP FP 10000. *       @ Isolate YYYY
+    4. ROLL *              @ Get sign and adjust year
+    3. ROLLD               @ Output YYYY MM DD
+    IF -42 FS?
+    THEN SWAP
+    END
+\>>

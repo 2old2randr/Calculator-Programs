@@ -1,0 +1,30 @@
+@ Convert date in HP format to string
+\<<
+    RCLF                        @ Save system flags and set STD mode
+    STD                         @ for number to string conversions
+    \<<
+        GET                     @ Get number from list (m or d)
+        IF DUP 9. >             @ If number is 2 digits then
+        THEN ""                 @ no leading 0
+        ELSE "0"
+        END
+        SWAP + \<-sep +         @ Convert to string, add separator
+        ROT                     @ Rotate next list into position
+    \>>
+    \-> flg ToStr
+    \<<
+        D2YMD 3. \->LIST R\->I  @ Create { y m d } list
+        DUP DUP
+        IF -42 FS?              @ Determine mm/dd order
+        THEN 3. 2. "."
+        ELSE 2. 3. "/"
+        END
+        \-> month day \<-sep
+        \<<
+            month ToStr EVAL
+            day ToStr EVAL
+            HEAD + +
+        \>>
+        flg STOF                @ Restore system flags
+    \>>
+\>>
