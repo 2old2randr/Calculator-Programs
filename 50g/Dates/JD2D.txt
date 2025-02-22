@@ -1,0 +1,27 @@
+@ Convert a Julian day number to a date (yy, mm, dd on stack)
+\<<
+    .5 + DUP FP SWAP IP       @ I=integer part, F=fractional part
+    IF DUP 2299160. >
+    THEN DUP 1867216.25 -     @ A=IP((I-1867216.25)/36524.25)
+        36524.25 / IP
+        DUP 4. / IP - 1. + +  @ B=I+I+A-IP(A/4)
+    END                       @ Else B=I
+    1524 +                    @ C=B+1524
+    DUP 122.1 - 365.25 / IP   @ D=IP((C-122.1)/365.25)
+    DUP 365.25 * IP           @ E=IP(356.25*D)
+    3. PICK OVER - 30.6001 / IP @ G=IP((C-E)/30.6001)
+    4. ROLL ROT -             @ Day no.=C-E+F-IP(G*30.6001)
+    4. ROLL + 30.6001
+    3. PICK * IP - SWAP
+    IF DUP 13.5 <             @ m= G-1 or G-13
+    THEN 1. -
+    ELSE 13. -
+    END
+    ROT
+    IF OVER 2.5 >             @ If m>2.5, y=D-4716
+    THEN 4716. -
+    ELSE 4715. -
+    END
+    SWAP ROT
+    YMD2D
+\>>
