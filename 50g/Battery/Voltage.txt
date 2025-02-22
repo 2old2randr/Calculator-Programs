@@ -1,0 +1,26 @@
+Values returned by calculator vs. actual voltage.
+
+hex   Dec Volts Message
+----------------------------------
+#3D1h 977 5.99  BATTERY NORMAL          
+#3D0h 976 5.97  ...                     
+#3B8h 952 5.83  ...                     
+#3B4h 948 5.82  ...                     
+#37Dh 893 5.48                         
+#376h 886 5.44                         
+#345h 837 5.15                         
+#333h 819 5.03                         
+#310h 784 4.82  ...                     
+#30Fh 783 4.82  BATTERY NORMAL          
+#30Eh 782 4.81  BATTERY WARNING         
+#302h 770 4.74  ...                     
+#2FEh 766 4.72                         
+#2F5h 757 4.68                         
+#2C4h 708 4.36                         
+#299h 665 4.10                         
+#288h 648 4.00                         
+#262h 610 3.69  (sporadic TTRM...)      
+
+BTW: #3FEh is the max. value that is displayed even on 6.75V...
+
+Best fit is V = 0.00703903790496 * x ^ 0.979830943213
