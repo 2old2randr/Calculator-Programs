@@ -1,5 +1,7 @@
-@ Given the year on the stack, return the date of Easter in HP format
-\<<  DUP DUP
+@ Given the year on the stack, return the date of Easter as HP date
+\<<  DUP
+     IF 1583. < THEN "Year < 1583" DOERR END      @ Gregorian calendar only
+     DUPDUP
      19. MOD                                      @ y mod 19: a
      SWAP
      100. / DUP FP 100. * SWAP IP                 @ y/100: c(rem), b(quot)
@@ -17,8 +19,6 @@
      22. * + 3. PICK 11. * + 451. / IP            @ IP((a+11h+22l)/451): m
      7. * - + 114. + 31. /                        @ (h+l-7m+114)/31: p(rem), n(quot)
      DUP FP 31. * 1. RND 1. + SWAP IP             @ mm=n, dd=p+1
-     IF -42 FC?
-     THEN SWAP
-     END
-     100. / + SWAP 1000000. / +                   @ dd.mmyyyy or mm.ddyyyy
+     IF -42 FC? THEN SWAP END
+     100. / + SWAP 1000000. / +                   @ d.mmyyyy or m.ddyyyy
 \>>
