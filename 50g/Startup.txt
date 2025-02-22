@@ -1,3 +1,14 @@
 @ Set keytime to a low value after warm start
-\<< 150 \->KEYTIME \>>
+\<< 150 \->KEYTIME
+    -41 SF        @ 24 hr clock
+    -42 SF        @ dd.mmyyyy format
+    -60 SF        @ [Alpha] locks
+    -61 SF        @ [User] locks
+    -62 SF        @ User mode active
+    -68 SF        @ Auto-indent in editor
+    -92 SF        @ Assembler defaults to SysRPL
+    -95 CF        @ RPN mode
+    -117 SF       @ Soft menus
+    257 ATTACH    @ Assembler menu
+\>>
 'STARTUP' STO
