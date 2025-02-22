@@ -1,0 +1,7 @@
+@ Toggle stack display between UserRPL and SysRPL
+\<<
+    IF -85 FS?
+    THEN -85 CF
+    ELSE -85 SF
+    END
+\>>
